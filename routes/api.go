@@ -15,9 +15,6 @@ func APIRoutes(r *gin.Engine) {
 			c.JSON(http.StatusOK, gin.H{"message": "pong kaleee"})
 		})
 
-		hello := new(controllers.HelloWorldController)
-		v1.GET("/hello", hello.Default)
-
 		user := new(controllers.UserController)
 		v1.POST("/signup", user.Signup)
 		v1.POST("/login", user.Login)
