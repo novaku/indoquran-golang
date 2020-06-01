@@ -10,6 +10,7 @@ func init() {
 	config.SetLogger()
 }
 
+// main function
 func main() {
 	services.StartServer()
 }
