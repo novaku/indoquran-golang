@@ -15,13 +15,9 @@ type Connection struct {
 // NewConnection handles connecting to a mongo database
 func NewConnection(dbName string) (conn *Connection) {
 	info := &mgo.DialInfo{
-		// Address if its a local db then the value host=localhost
-		Addrs: []string{config.LoadConfig().Database.Host},
-		// Timeout when a failure to connect to db
-		Timeout: 60 * time.Second,
-		// Database name
+		Addrs:    []string{config.LoadConfig().Database.Host},
+		Timeout:  60 * time.Second,
 		Database: dbName,
-		// Database credentials if your db is protected
 		Username: config.LoadConfig().Database.Username,
 		Password: config.LoadConfig().Database.Password,
 	}

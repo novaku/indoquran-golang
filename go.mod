@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

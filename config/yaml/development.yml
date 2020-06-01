@@ -2,6 +2,7 @@
 server:
   host: "localhost"
   port: 8080
+  secret: "1EB8F5E4C45CBEB96715894759FB2"
 
 # Database credentials
 database:
@@ -9,3 +10,8 @@ database:
   dbName: "indoquran"
   user: "indoquran"
   pass: "indoquran"
+
+# Logging setup
+logger:
+  path: "./"
+  filename: "logger.log"

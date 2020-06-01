@@ -1,11 +1,15 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 // HelloWorldController will hold the methods to the
 type HelloWorldController struct{}
 
 // Default controller handles returning the hello world JSON response
 func (h *HelloWorldController) Default(c *gin.Context) {
-	c.JSON(200, gin.H{"message": "Hello world, climate change is real"})
+	DefaultResponse(c, http.StatusOK, "Hello %s", "world")
 }

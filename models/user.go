@@ -10,7 +10,6 @@ import (
 // User defines user object structure
 type User struct {
 	ID         bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	UserName   string        `json:"username" bson:"username"`
 	Name       string        `json:"name" bson:"name"`
 	Email      string        `json:"email" bson:"email"`
 	Password   string        `json:"password" bson:"password"`
@@ -29,10 +28,18 @@ func (u *UserModel) Signup(data forms.SignupUserCommand) error {
 		"name":     data.Name,
 		"email":    data.Email,
 		"password": helpers.GeneratePasswordHash([]byte(data.Password)),
-		"username": data.UserName,
 		// This will come later when adding verification
 		"is_verified": false,
 	})
 
 	return err
+}
+
+// GetUserByEmail : search user by email
+func (u *UserModel) GetUserByEmail(email string) (user User, err error) {
+	collection := dbConnect.Use(databaseName, "user")
+
+	err = collection.Find(bson.M{"email": email}).One(&user)
+
+	return user, err
 }
