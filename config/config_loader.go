@@ -28,7 +28,7 @@ func readFile(cfg *Config) {
 		envVar = "development" // set default environment to development
 	}
 
-	filename := fmt.Sprintf("./config/yaml/%s.yml", envVar)
+	filename := fmt.Sprintf("config/yaml/%s.yml", envVar)
 	f, err := os.Open(filename)
 	if err != nil {
 		processError(err)

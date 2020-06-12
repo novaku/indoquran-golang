@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"indoquran-golang/config"
 	"time"
 
@@ -25,6 +26,9 @@ func NewConnection(dbName string) (conn *Connection) {
 	session, err := mgo.DialWithInfo(info)
 
 	if err != nil {
+		fmt.Println("Host : " + config.LoadConfig().Database.Host)
+		fmt.Println("dbname : " + config.LoadConfig().Database.DatabaseName)
+		fmt.Println("username: " + config.LoadConfig().Database.Username)
 		panic(err)
 	}
 

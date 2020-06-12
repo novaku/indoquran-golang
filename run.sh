@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
-docker stop go-gin
-docker rm go-gin
-docker rmi go-gin
+DOCKER_NAME=indoquran-api
 
-docker build . -t go-gin
-docker run -i -t -p 8080:8080 --name go-gin go-gin
+docker stop $DOCKER_NAME
+docker rm $DOCKER_NAME
+docker rmi $DOCKER_NAME
+
+docker run --name redis -d -p 6379:6379 redis redis-server --appendonly yes
+docker run -itd -p 27017:27017 --name mongo -v /c/docker/indoquran-golang/docker/mongo:/data/db mongo
+docker build --build-arg ENV=development . -t $DOCKER_NAME
+docker run -it -d -p 8080:8080 --env ENV=development --name $DOCKER_NAME --link mongo --link redis $DOCKER_NAME
+
+printf "y\n" | docker system prune

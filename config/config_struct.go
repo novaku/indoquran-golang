@@ -14,6 +14,11 @@ type serverConfig struct {
 	Secret string `yaml:"secret"`
 }
 
+type redisConfig struct {
+	Port string `yaml:"port"`
+	Host string `yaml:"host"`
+}
+
 // DatabaseConfig : structure for database config
 type databaseConfig struct {
 	Host         string `yaml:"host"`

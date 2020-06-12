@@ -1,15 +1,19 @@
 # Server configurations
 server:
-  host: "localhost"
+  host: "0.0.0.0"
   port: 8080
   secret: "1EB8F5E4C45CBEB96715894759FB2"
 
+redis:
+  host: "redis"
+  port: 6379
+
 # Database credentials
 database:
-  host: "localhost"
+  host: "mongo:27017"
   dbName: "indoquran"
-  user: "indoquran"
-  pass: "indoquran"
+  username: "indoquran"
+  password: "indoquran"
 
 # Logging setup
 logger:
