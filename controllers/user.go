@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"indoquran-golang/forms"
 	"indoquran-golang/helpers"
 	"indoquran-golang/models"
 	"net/http"
@@ -18,7 +17,7 @@ type UserController struct{}
 
 // Signup controller handles registering a user
 func (u *UserController) Signup(c *gin.Context) {
-	var data forms.SignupUserCommand
+	var data models.SignupUserCommand
 
 	if c.BindJSON(&data) != nil {
 		DefaultResponse(c, http.StatusNotAcceptable, "Provide relevant fields")
@@ -57,7 +56,7 @@ func (u *UserController) Signup(c *gin.Context) {
 // Login allows a user to login a user and get
 // access token
 func (u *UserController) Login(c *gin.Context) {
-	var data forms.LoginUserCommand
+	var data models.LoginUserCommand
 
 	// Bind the request body data to var data and check if all details are provided
 	if c.BindJSON(&data) != nil {
@@ -102,7 +101,7 @@ func (u *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	TokenResponse(c, http.StatusOK, &forms.Token{
+	TokenResponse(c, http.StatusOK, &models.Token{
 		Message: "Log in success",
 		Token:   jwtToken,
 	})

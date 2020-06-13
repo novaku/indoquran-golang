@@ -22,4 +22,5 @@ COPY --from=builder /api/. .
 
 EXPOSE 8080
 
-ENTRYPOINT ["./app"]
+ENV logDir /tmp
+ENTRYPOINT ["./app", "-log_dir=${logDir}", "-alsologtostderr", "-v=2"]

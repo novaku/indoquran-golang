@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
 )
 
 // APIRoutes routes for API
@@ -13,6 +14,7 @@ func APIRoutes(r *gin.Engine) {
 	{
 		v1.GET("/ping", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"message": "pong kaleee"})
+			glog.Info("only ping")
 		})
 
 		user := new(controllers.UserController)

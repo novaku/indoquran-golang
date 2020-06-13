@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"indoquran-golang/forms"
+	"indoquran-golang/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +15,6 @@ func DefaultResponse(c *gin.Context, status int, message string, attrib ...inter
 }
 
 // TokenResponse : token result response
-func TokenResponse(c *gin.Context, status int, token *forms.Token) {
+func TokenResponse(c *gin.Context, status int, token *models.Token) {
 	c.JSON(status, token)
 }
