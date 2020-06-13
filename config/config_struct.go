@@ -2,32 +2,35 @@ package config
 
 // Config : structure of the YAML file configuration
 type Config struct {
-	Server   serverConfig   `yaml:"server"`
-	Database databaseConfig `yaml:"database"`
-	Logger   loggerConfig   `yaml:"logger"`
+	Server   ServerConfig   `yaml:"server"`
+	Database DatabaseConfig `yaml:"database"`
+	Logger   LoggerConfig   `yaml:"logger"`
+	Redis    RedisConfig    `yaml:"redis"`
 }
 
 // ServerConfig : structure for server config
-type serverConfig struct {
+type ServerConfig struct {
 	Port   string `yaml:"port"`
 	Host   string `yaml:"host"`
 	Secret string `yaml:"secret"`
 }
 
-type redisConfig struct {
-	Port string `yaml:"port"`
-	Host string `yaml:"host"`
-}
-
 // DatabaseConfig : structure for database config
-type databaseConfig struct {
+type DatabaseConfig struct {
 	Host         string `yaml:"host"`
 	DatabaseName string `yaml:"dbName"`
 	Username     string `yaml:"username"`
 	Password     string `yaml:"password"`
 }
 
-type loggerConfig struct {
+// LoggerConfig : configuration for logger
+type LoggerConfig struct {
 	Path     string `yaml:"path"`
 	FileName string `yaml:"filename"`
+}
+
+// RedisConfig : configuration fo redis
+type RedisConfig struct {
+	Port string `yaml:"port"`
+	Host string `yaml:"host"`
 }

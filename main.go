@@ -2,7 +2,7 @@ package main
 
 import (
 	"indoquran-golang/config"
-	"indoquran-golang/services"
+	"indoquran-golang/server"
 )
 
 // init gets called before the main function
@@ -12,5 +12,5 @@ func init() {
 
 // main function
 func main() {
-	services.StartServer()
+	server.StartServer()
 }

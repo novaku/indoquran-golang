@@ -1,4 +1,4 @@
-package db
+package services
 
 import (
 	"fmt"
@@ -8,13 +8,13 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-// Connection defines the connection structure
-type Connection struct {
+// MGOConnection defines the connection structure
+type MGOConnection struct {
 	session *mgo.Session
 }
 
-// NewConnection handles connecting to a mongo database
-func NewConnection(dbName string) (conn *Connection) {
+// MGONewConnection handles connecting to a mongo database
+func MGONewConnection(dbName string) (conn *MGOConnection) {
 	info := &mgo.DialInfo{
 		Addrs:    []string{config.LoadConfig().Database.Host},
 		Timeout:  60 * time.Second,
@@ -33,18 +33,18 @@ func NewConnection(dbName string) (conn *Connection) {
 	}
 
 	session.SetMode(mgo.Monotonic, true)
-	conn = &Connection{session}
+	conn = &MGOConnection{session}
 	return conn
 }
 
-// Use handles connect to a certain collection
-func (conn *Connection) Use(dbName, tableName string) (collection *mgo.Collection) {
+// MGOUse handles connect to a certain collection
+func (conn *MGOConnection) MGOUse(dbName, tableName string) (collection *mgo.Collection) {
 	// This returns method that interacts with a specific collection and table
 	return conn.session.DB(dbName).C(tableName)
 }
 
-// Close handles closing a database connection
-func (conn *Connection) Close() {
+// MGOClose handles closing a database connection
+func (conn *MGOConnection) MGOClose() {
 	// This closes the connection
 	conn.session.Close()
 	return

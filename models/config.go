@@ -2,11 +2,11 @@ package models
 
 import (
 	"indoquran-golang/config"
-	"indoquran-golang/db"
+	"indoquran-golang/services"
 )
 
 // Database name
 var databaseName = config.LoadConfig().Database.DatabaseName
 
 // Create a connection
-var dbConnect = db.NewConnection(databaseName)
+var dbConnect = services.MGONewConnection(databaseName)
