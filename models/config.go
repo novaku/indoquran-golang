@@ -5,8 +5,8 @@ import (
 	"indoquran-golang/services"
 )
 
-// Database name
-var databaseName = config.LoadConfig().Database.DatabaseName
+// DatabaseName database name
+var DatabaseName = config.LoadConfig().Database.DatabaseName
 
-// Create a connection
-var dbConnect = services.MGONewConnection(databaseName)
+// DBConnect create a connection
+var DBConnect = services.MGONewConnection(DatabaseName)

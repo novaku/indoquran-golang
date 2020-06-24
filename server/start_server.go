@@ -1,7 +1,6 @@
 package server
 
 import (
-	"flag"
 	"indoquran-golang/config"
 	"indoquran-golang/routes"
 	"time"
@@ -12,7 +11,6 @@ import (
 
 // StartServer : start the server, load the router
 func StartServer() {
-	flag.Parse()
 	r := gin.Default()
 	gin.SetMode(gin.DebugMode)
 	r.Use(ginglog.Logger(2 * time.Second))

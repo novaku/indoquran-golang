@@ -11,9 +11,6 @@ type User struct {
 	IsVerified bool          `json:"is_verified" bson:"is_verified"`
 }
 
-// UserModel defines the model structure
-type UserModel struct{}
-
 // SignupUserCommand defines user form struct
 type SignupUserCommand struct {
 	// binding:"required" ensures that the field is provided
