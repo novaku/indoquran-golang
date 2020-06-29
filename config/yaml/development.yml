@@ -14,3 +14,6 @@ database:
   dbName: "indoquran"
   username: "indoquran"
   password: "indoquran"
+
+session:
+  expire: 1440 #minutes

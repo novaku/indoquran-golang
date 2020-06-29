@@ -5,6 +5,7 @@ type Config struct {
 	Server   serverConfig   `yaml:"server"`
 	Database databaseConfig `yaml:"database"`
 	Redis    redisConfig    `yaml:"redis"`
+	Session  session        `yaml:"session"`
 }
 
 type serverConfig struct {
@@ -23,4 +24,8 @@ type databaseConfig struct {
 type redisConfig struct {
 	Port string `yaml:"port"`
 	Host string `yaml:"host"`
+}
+
+type session struct {
+	Expire int64 `yaml:"expire"`
 }

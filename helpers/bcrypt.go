@@ -19,7 +19,7 @@ func GeneratePasswordHash(password []byte) string {
 }
 
 // PasswordCompare handles password hash compare
-func PasswordCompare(password []byte, hashedPassword []byte) error {
+func PasswordCompare(hashedPassword []byte, password []byte) error {
 	err := bcrypt.CompareHashAndPassword(hashedPassword, password)
 
 	return err

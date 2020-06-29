@@ -60,20 +60,20 @@ func (u *UserController) Login(c *gin.Context) {
 
 	// Bind the request body data to var data and check if all details are provided
 	if c.BindJSON(&data) != nil {
-		c.JSON(406, gin.H{"message": "Provide required details"})
+		DefaultResponse(c, http.StatusNotAcceptable, data, "Request provided is not acceptable")
 		c.Abort()
 		return
 	}
 
-	result, err := userModel.GetUserByEmail(data.Email)
+	result, errEmail := userModel.GetUserByEmail(data.Email)
 
 	if result.Email == "" {
-		DefaultResponse(c, http.StatusNotFound, "User email %s account was not found", data.Email)
+		DefaultResponse(c, http.StatusNotFound, data, "User email %s account not found", data.Email)
 		c.Abort()
 		return
 	}
 
-	if err != nil {
+	if errEmail != nil {
 		DefaultResponse(c, http.StatusBadRequest, data, "Problem logging into your account")
 		c.Abort()
 		return
@@ -84,18 +84,18 @@ func (u *UserController) Login(c *gin.Context) {
 	// Get the password provided in the request.body
 	password := []byte(data.Password)
 
-	err = helpers.PasswordCompare(password, hashedPassword)
+	errHash := helpers.PasswordCompare(hashedPassword, password)
 
-	if err != nil {
+	if errHash != nil {
 		DefaultResponse(c, http.StatusForbidden, data, "Invalid user credentials")
 		c.Abort()
 		return
 	}
 
-	jwtToken, err2 := helpers.GenerateToken(data.Email)
+	jwtToken, errJwt := helpers.GenerateToken(data.Email)
 
 	// If we fail to generate token for access
-	if err2 != nil {
+	if errJwt != nil {
 		DefaultResponse(c, http.StatusInternalServerError, data, "There was a problem logging you in, try again later")
 		c.Abort()
 		return

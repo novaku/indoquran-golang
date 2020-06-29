@@ -19,13 +19,16 @@ type Claims struct {
 // GenerateToken handles generation of a jwt code
 // @returns string -> token and error -> err
 func GenerateToken(userID string) (string, error) {
+	var err error
+
 	// Define token expiration time
-	expirationTime := time.Now().Add(1440 * time.Minute)
+	sessionExpire := config.LoadConfig().Session.Expire
+	expirationTime := time.Now().Add(time.Minute * time.Duration(sessionExpire)).Unix()
 	// Define the payload and exp time
 	claims := &Claims{
 		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+			ExpiresAt: expirationTime,
 		},
 	}
 
