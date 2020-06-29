@@ -20,7 +20,7 @@ func (u *UserController) Signup(c *gin.Context) {
 	var data models.SignupUserCommand
 
 	if c.BindJSON(&data) != nil {
-		DefaultResponse(c, http.StatusNotAcceptable, "Provide relevant fields")
+		DefaultResponse(c, http.StatusNotAcceptable, data, "Provide relevant fields")
 		c.Abort()
 		return
 	}
@@ -28,7 +28,7 @@ func (u *UserController) Signup(c *gin.Context) {
 	// email validator
 	emailErr := checkmail.ValidateFormat(data.Email)
 	if emailErr != nil {
-		DefaultResponse(c, http.StatusBadRequest, "Email is invalid (%s)", data.Email)
+		DefaultResponse(c, http.StatusBadRequest, data, "Email is invalid (%s)", data.Email)
 		c.Abort()
 		return
 	}
@@ -36,7 +36,7 @@ func (u *UserController) Signup(c *gin.Context) {
 	// search if email already registered
 	resEmail, _ := userModel.GetUserByEmail(data.Email)
 	if resEmail.Email != "" {
-		DefaultResponse(c, http.StatusForbidden, "Email %s already in use!", data.Email)
+		DefaultResponse(c, http.StatusForbidden, data, "Email %s already in use!", data.Email)
 		c.Abort()
 		return
 	}
@@ -45,12 +45,12 @@ func (u *UserController) Signup(c *gin.Context) {
 
 	// Check if there was an error when saving user
 	if err != nil {
-		DefaultResponse(c, http.StatusBadRequest, "Problem creating an account")
+		DefaultResponse(c, http.StatusBadRequest, data, "Problem creating an account")
 		c.Abort()
 		return
 	}
 
-	DefaultResponse(c, http.StatusCreated, "New account registered (%s)", data.Email)
+	DefaultResponse(c, http.StatusCreated, data, "New account registered (%s)", data.Email)
 }
 
 // Login allows a user to login a user and get
@@ -74,7 +74,7 @@ func (u *UserController) Login(c *gin.Context) {
 	}
 
 	if err != nil {
-		DefaultResponse(c, http.StatusBadRequest, "Problem logging into your account")
+		DefaultResponse(c, http.StatusBadRequest, data, "Problem logging into your account")
 		c.Abort()
 		return
 	}
@@ -87,7 +87,7 @@ func (u *UserController) Login(c *gin.Context) {
 	err = helpers.PasswordCompare(password, hashedPassword)
 
 	if err != nil {
-		DefaultResponse(c, http.StatusForbidden, "Invalid user credentials")
+		DefaultResponse(c, http.StatusForbidden, data, "Invalid user credentials")
 		c.Abort()
 		return
 	}
@@ -96,7 +96,7 @@ func (u *UserController) Login(c *gin.Context) {
 
 	// If we fail to generate token for access
 	if err2 != nil {
-		DefaultResponse(c, http.StatusInternalServerError, "There was a problem logging you in, try again later")
+		DefaultResponse(c, http.StatusInternalServerError, data, "There was a problem logging you in, try again later")
 		c.Abort()
 		return
 	}

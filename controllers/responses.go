@@ -8,10 +8,13 @@ import (
 )
 
 // DefaultResponse : default response
-func DefaultResponse(c *gin.Context, status int, message string, attrib ...interface{}) {
+func DefaultResponse(c *gin.Context, status int, data interface{}, message string, attrib ...interface{}) {
 	msg := fmt.Sprintf(message, attrib...)
 
-	c.JSON(status, gin.H{"message": msg})
+	c.JSON(status, gin.H{
+		"data":    data,
+		"message": msg,
+	})
 }
 
 // TokenResponse : token result response
