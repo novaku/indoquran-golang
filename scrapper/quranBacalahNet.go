@@ -2,9 +2,10 @@ package scrapper
 
 import (
 	"fmt"
-	"indoquran-golang/models"
 	"strconv"
 	"sync"
+
+	"indoquran-golang/models"
 )
 
 const (
@@ -28,11 +29,13 @@ func ScrapQuranBacalahNet() {
 func worker(id int, wg *sync.WaitGroup, m *sync.Mutex) {
 	m.Lock() // acquire lock
 
+	collection := models.DBConnect.MGOUse(models.DatabaseName, "ayat")
+
 	defer wg.Done()
 	defer m.Unlock()
+	defer collection.Database.Session.Close()
 
 	model := &models.AyatModel{}
-	collection := models.DBConnect.MGOUse(models.DatabaseName, "ayat")
 
 	idString := strconv.Itoa(id)
 	ayatSurat := models.StaticAyatID[idString]

@@ -49,14 +49,10 @@ func DecodeToken(tkStr string) (string, error) {
 		return jwtKey, nil
 	})
 
-	if err != nil {
+	if err != nil || !tkn.Valid {
 		if err == jwt.ErrSignatureInvalid {
 			return "", err
 		}
-		return "", err
-	}
-
-	if !tkn.Valid {
 		return "", err
 	}
 
