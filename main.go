@@ -15,14 +15,14 @@ const (
 // init gets called before the main function
 func init() {
 	flag.Parse()
-	scrap := os.Getenv("SCRAPP")
-	importDB := os.Getenv("IMPORT")
+	scrap := os.Getenv("SCRAPP")    // to scrap from web
+	importDB := os.Getenv("IMPORT") // to import from csv to mongodb
 	if scrap == yes {
 		models.InitializeStaticAyatSuratID()
 		scrapper.ScrapQuranBacalahNet() // do scrapping to http://quran.bacalah.net/content/surat/GetContentAyat.php
 	}
 	if importDB == yes {
-		lang := os.Getenv("LANG")
+		lang := os.Getenv("LANG") // import language
 		filePath := ""
 		if lang == "en" {
 			filePath = "./resurces/English-Yusuf-Ali-59.csv"
