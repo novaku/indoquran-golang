@@ -8,7 +8,7 @@ import (
 
 // Signup handles registering a user
 func (u *UserModel) Signup(data SignupUserCommand) error {
-	collection := DBConnect.MGOUse(DatabaseName, "user")
+	collection := DBConnect.MGOUse(DatabaseName, CollUser)
 	user := &UserModel{
 		Name:     data.Name,
 		Email:    data.Email,
@@ -20,7 +20,7 @@ func (u *UserModel) Signup(data SignupUserCommand) error {
 
 // GetUserByEmail : search user by email
 func (u *UserModel) GetUserByEmail(email string) (user User, err error) {
-	collection := DBConnect.MGOUse(DatabaseName, "user")
+	collection := DBConnect.MGOUse(DatabaseName, CollUser)
 
 	err = collection.Find(bson.M{"email": email}).One(&user)
 

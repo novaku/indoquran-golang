@@ -16,7 +16,7 @@ import (
 func ImporrtCSVFile(path, lang string) {
 	glog.Infof("import language: %s, file %s", lang, path)
 
-	collection := models.DBConnect.MGOUse(models.DatabaseName, "ayat")
+	collection := models.DBConnect.MGOUse(models.DatabaseName, models.CollAyat)
 
 	defer collection.Database.Session.Close()
 

@@ -25,13 +25,13 @@ func init() {
 		lang := os.Getenv("LANG") // import language
 		filePath := ""
 		if lang == "en" {
-			filePath = "./resurces/English-Yusuf-Ali-59.csv"
+			filePath = "./resources/English-Yusuf-Ali-59.csv"
 		}
 		if lang == "id" {
-			filePath = "./resurces/Indonesian-Bahasa-Indonesia-68.csv"
+			filePath = "./resources/Indonesian-Bahasa-Indonesia-68.csv"
 		}
 		if lang == "ar" {
-			filePath = "./resurces/Arabic-(Original-Book)-1.csv"
+			filePath = "./resources/Arabic-(Original-Book)-1.csv"
 		}
 		scrapper.ImporrtCSVFile(filePath, lang)
 	}
