@@ -12,8 +12,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// ImporrtCSVFile : import from CSV file to mongodb
-func ImporrtCSVFile(path, lang string) {
+// ImportCSVFile : import from CSV file to mongodb
+func ImportCSVFile(path, lang string) {
 	glog.Infof("import language: %s, file %s", lang, path)
 
 	collection := models.DBConnect.MGOUse(models.DatabaseName, models.CollAyat)
@@ -30,6 +30,7 @@ func ImporrtCSVFile(path, lang string) {
 	reader := csv.NewReader(bufio.NewReader(file))
 	reader.LazyQuotes = true
 
+	header := true
 	for {
 		record, err := reader.Read()
 		if err == io.EOF {
@@ -38,17 +39,10 @@ func ImporrtCSVFile(path, lang string) {
 			panic(err)
 		}
 
-		suratID, errSurat := strconv.Atoi(record[1])
-		if errSurat != nil {
-			glog.Errorf("error convert suratID: %s", record[1])
-		}
+		if !header {
+			suratID, _ := strconv.Atoi(record[1])
+			ayatID, _ := strconv.Atoi(record[2])
 
-		ayatID, errAyat := strconv.Atoi(record[2])
-		if errAyat != nil {
-			glog.Error("error convert ayatID: %s", record[2])
-		}
-
-		if errSurat == nil || errAyat == nil {
 			selector := bson.M{
 				"surat_id": suratID,
 				"ayat_id":  ayatID,
@@ -63,5 +57,6 @@ func ImporrtCSVFile(path, lang string) {
 
 			glog.Infof("Updating surat: %d, ayat: %d, lang: %s", suratID, ayatID, lang)
 		}
+		header = false
 	}
 }
