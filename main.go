@@ -22,18 +22,7 @@ func init() {
 		scrapper.ScrapQuranBacalahNet() // do scrapping to http://quran.bacalah.net/content/surat/GetContentAyat.php
 	}
 	if importDB == yes {
-		lang := os.Getenv("LANG") // import language
-		filePath := ""
-		if lang == "en" {
-			filePath = "./resources/English-Ahmed-Ali-100.csv"
-		}
-		if lang == "id" {
-			filePath = "./resources/Indonesian-Bahasa-Indonesia-68.csv"
-		}
-		if lang == "ar" {
-			filePath = "./resources/Arabic-(Original-Book)-1.csv"
-		}
-		scrapper.ImportCSVFile(filePath, lang)
+		scrapper.ImportCSVFile()
 	}
 }
 

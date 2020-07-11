@@ -13,14 +13,26 @@ import (
 )
 
 // ImportCSVFile : import from CSV file to mongodb
-func ImportCSVFile(path, lang string) {
-	glog.Infof("import language: %s, file %s", lang, path)
+func ImportCSVFile() {
+	lang := os.Getenv("LANG") // import language
+	filePath := ""
+	if lang == "en" {
+		filePath = "./resources/English-Ahmed-Ali-100.csv"
+	}
+	if lang == "id" {
+		filePath = "./resources/Indonesian-Bahasa-Indonesia-68.csv"
+	}
+	if lang == "ar" {
+		filePath = "./resources/Arabic-(Original-Book)-1.csv"
+	}
+
+	glog.Infof("import language: %s, file %s", lang, filePath)
 
 	collection := models.DBConnect.MGOUse(models.DatabaseName, models.CollAyat)
 
 	defer collection.Database.Session.Close()
 
-	file, err := os.Open(path)
+	file, err := os.Open(filePath)
 
 	if err != nil {
 		panic(err)
