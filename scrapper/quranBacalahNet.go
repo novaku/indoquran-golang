@@ -29,7 +29,7 @@ func ScrapQuranBacalahNet() {
 func worker(id int, wg *sync.WaitGroup, m *sync.Mutex) {
 	m.Lock() // acquire lock
 
-	collection := models.DBConnect.MGOUse(models.DatabaseName, models.CollAyat)
+	collection := models.DBConnect.MongoUse(models.DatabaseName, models.CollAyat)
 
 	defer wg.Done()
 	defer m.Unlock()

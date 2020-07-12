@@ -9,4 +9,4 @@ import (
 var DatabaseName = config.LoadConfig().Database.DatabaseName
 
 // DBConnect create a connection
-var DBConnect = services.MGONewConnection(DatabaseName)
+var DBConnect = services.MongoNewConnection(DatabaseName)

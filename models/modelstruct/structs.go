@@ -1,4 +1,4 @@
-package models
+package modelstruct
 
 import "gopkg.in/mgo.v2/bson"
 
@@ -29,4 +29,26 @@ type LoginUserCommand struct {
 type Token struct {
 	Message string `json:"message"`
 	Token   string `json:"token"`
+}
+
+// TokenDetails : token user detail
+type TokenDetails struct {
+	AccessToken  string
+	RefreshToken string
+	AccessUUID   string
+	RefreshUUID  string
+	AtExpires    int64
+	RtExpires    int64
+}
+
+// TokenResult : tokern output for controller
+type TokenResult struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+// AccessDetails : user access detail
+type AccessDetails struct {
+	AccessUUID string
+	UserID     uint64
 }

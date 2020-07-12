@@ -28,7 +28,7 @@ func ImportCSVFile() {
 
 	glog.Infof("import language: %s, file %s", lang, filePath)
 
-	collection := models.DBConnect.MGOUse(models.DatabaseName, models.CollAyat)
+	collection := models.DBConnect.MongoUse(models.DatabaseName, models.CollAyat)
 
 	defer collection.Database.Session.Close()
 

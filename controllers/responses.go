@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"indoquran-golang/models"
+	"indoquran-golang/models/modelstruct"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +18,6 @@ func DefaultResponse(c *gin.Context, status int, data interface{}, message strin
 }
 
 // TokenResponse : token result response
-func TokenResponse(c *gin.Context, status int, token *models.Token) {
+func TokenResponse(c *gin.Context, status int, token *modelstruct.TokenResult) {
 	c.JSON(status, token)
 }

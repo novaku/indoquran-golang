@@ -2,9 +2,11 @@ package helpers
 
 import (
 	"indoquran-golang/config"
+	"indoquran-golang/models/modelstruct"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/myesui/uuid"
 )
 
 var serverSecret = config.LoadConfig().Server.Secret
@@ -16,29 +18,38 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-// GenerateToken handles generation of a jwt code
-// @returns string -> token and error -> err
-func GenerateToken(userID string) (string, error) {
-	var err error
+// CreateToken : create token jwt
+func CreateToken(userid string) (*modelstruct.TokenDetails, error) {
+	authSecret := config.LoadConfig().Auth
+	td := &modelstruct.TokenDetails{}
+	td.AtExpires = time.Now().Add(time.Minute * time.Duration(authSecret.AccessExpire)).Unix()
+	td.AccessUUID = uuid.NewV4().String()
 
-	// Define token expiration time
-	sessionExpire := config.LoadConfig().Session.Expire
-	expirationTime := time.Now().Add(time.Minute * time.Duration(sessionExpire)).Unix()
-	// Define the payload and exp time
-	claims := &Claims{
-		UserID: userID,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime,
-		},
+	td.RtExpires = time.Now().Add(time.Hour * time.Duration(authSecret.RefreshExpire)).Unix()
+	td.RefreshUUID = uuid.NewV4().String()
+
+	var err error
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["access_uuid"] = td.AccessUUID
+	atClaims["user_id"] = userid
+	atClaims["exp"] = td.AtExpires
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	td.AccessToken, err = at.SignedString([]byte(authSecret.AccessSecret))
+	if err != nil {
+		return nil, err
 	}
 
-	// Generate token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Sign token with secret key encoding
-	tokenString, err := token.SignedString(jwtKey)
-
-	return tokenString, err
+	rtClaims := jwt.MapClaims{}
+	rtClaims["refresh_uuid"] = td.RefreshUUID
+	rtClaims["user_id"] = userid
+	rtClaims["exp"] = td.RtExpires
+	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
+	td.RefreshToken, err = rt.SignedString([]byte(authSecret.RefreshSecret))
+	if err != nil {
+		return nil, err
+	}
+	return td, nil
 }
 
 // DecodeToken handles decoding a jwt token
