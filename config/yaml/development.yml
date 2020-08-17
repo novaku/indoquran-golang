@@ -3,12 +3,13 @@ server:
   host: "localhost"
   port: "8080"
   secret: "1EB8F5E4C45CBEB96715894759FB2"
+  set_mode: "debug" # debug, release, test
 
 auth:
   access_secret: "0z2P96ZJkzSOkYamf1F2d7K8dJycIdMz"
   refresh_secret: "6H9tZ881zOSIow2rN1bc2c1de0HGEcSH"
-  access_expire: 15 #minutes
-  refresh_expire: 168 #hours (1 week)
+  access_expire: 15 # minutes
+  refresh_expire: 168 # hours (1 week)
 
 redis:
   host: "localhost"

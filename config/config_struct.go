@@ -9,9 +9,10 @@ type Config struct {
 }
 
 type serverConfig struct {
-	Port   string `yaml:"port"`
-	Host   string `yaml:"host"`
-	Secret string `yaml:"secret"`
+	Port    string `yaml:"port"`
+	Host    string `yaml:"host"`
+	Secret  string `yaml:"secret"`
+	SetMode string `yml:"set_mode"`
 }
 
 type authConfig struct {

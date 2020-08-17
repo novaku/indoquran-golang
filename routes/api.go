@@ -4,12 +4,14 @@ import (
 	"indoquran-golang/controllers"
 	"indoquran-golang/middleware"
 
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 )
 
 // APIRoutes : routes for API
 func APIRoutes(r *gin.Engine) {
 	v1 := r.Group("/api/v1")
+	v1.Use(requestid.New())
 	{
 		// No auth
 		user := new(controllers.UserController)
@@ -20,8 +22,9 @@ func APIRoutes(r *gin.Engine) {
 		}
 
 		// With auth
-		v1Auth := v1.Use(middleware.TokenAuthMiddleware())
-		v1Auth.POST("/user/logout", user.Logout)
-
+		v1User.Use(middleware.TokenAuthMiddleware())
+		{
+			v1User.POST("/logout", user.Logout)
+		}
 	}
 }

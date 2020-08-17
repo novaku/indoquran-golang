@@ -3,12 +3,12 @@ package scrapper
 import (
 	"bufio"
 	"encoding/csv"
+	"indoquran-golang/helpers/logger"
 	"indoquran-golang/models"
 	"io"
 	"os"
 	"strconv"
 
-	"github.com/golang/glog"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -26,7 +26,7 @@ func ImportCSVFile() {
 		filePath = "./resources/Arabic-(Original-Book)-1.csv"
 	}
 
-	glog.Infof("import language: %s, file %s", lang, filePath)
+	logger.Info("", "", "import language: %s, file %s", lang, filePath)
 
 	collection := models.DBConnect.MongoUse(models.DatabaseName, models.CollAyat)
 
@@ -63,11 +63,11 @@ func ImportCSVFile() {
 			update := bson.M{"$set": bson.M{"translate_" + lang: record[3]}}
 			err = collection.Update(selector, update)
 			if err != nil {
-				glog.Errorf("Error updating surat: %d, ayat: %d, error: %+v", suratID, ayatID, err)
+				logger.Error("", "", "Error updating surat: %d, ayat: %d, error: %+v", suratID, ayatID, err)
 				panic(err)
 			}
 
-			glog.Infof("Updating surat: %d, ayat: %d, lang: %s", suratID, ayatID, lang)
+			logger.Info("", "", "Updating surat: %d, ayat: %d, lang: %s", suratID, ayatID, lang)
 		}
 		header = false
 	}

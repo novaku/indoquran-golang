@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/myesui/uuid"
+	"github.com/google/uuid"
 )
 
 var serverSecret = config.LoadConfig().Server.Secret
@@ -23,10 +23,10 @@ func CreateToken(userid string) (*modelstruct.TokenDetails, error) {
 	authSecret := config.LoadConfig().Auth
 	td := &modelstruct.TokenDetails{}
 	td.AtExpires = time.Now().Add(time.Minute * time.Duration(authSecret.AccessExpire)).Unix()
-	td.AccessUUID = uuid.NewV4().String()
+	td.AccessUUID = uuid.New().String()
 
 	td.RtExpires = time.Now().Add(time.Hour * time.Duration(authSecret.RefreshExpire)).Unix()
-	td.RefreshUUID = uuid.NewV4().String()
+	td.RefreshUUID = uuid.New().String()
 
 	var err error
 	atClaims := jwt.MapClaims{}

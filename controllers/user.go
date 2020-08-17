@@ -3,20 +3,27 @@ package controllers
 import (
 	"indoquran-golang/config"
 	"indoquran-golang/helpers"
+	"indoquran-golang/helpers/logger"
 	"indoquran-golang/models"
 	"indoquran-golang/models/modelstruct"
 	"net/http"
 	"time"
 
 	"github.com/badoux/checkmail"
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis"
-	"github.com/golang/glog"
+	"github.com/go-redis/redis/v7"
 )
 
 // Import the userModel from the models
 var userModel = new(models.UserModel)
 var client *redis.Client
+
+const (
+	signupLogTag = "controllers|user.go|Signup()"
+	loginLogTag  = "controllers|user.go|Login()"
+	logoutLogTag = "controllers|user.go|Logout"
+)
 
 // UserController defines the user controller methods
 type UserController struct{}
@@ -38,39 +45,49 @@ func init() {
 
 // Signup controller handles registering a user
 func (u *UserController) Signup(c *gin.Context) {
+	requestID := requestid.Get(c)
 	var data modelstruct.SignupUserCommand
 
-	if c.BindJSON(&data) != nil {
+	if bindErr := c.BindJSON(&data); bindErr != nil {
+		logger.Error(signupLogTag, requestID, "signup JSON bind failed, error : %+v", bindErr)
 		DefaultResponse(c, http.StatusNotAcceptable, data, "Provide relevant fields")
 		c.Abort()
 		return
 	}
 
 	// email validator
-	emailErr := checkmail.ValidateFormat(data.Email)
-	if emailErr != nil {
+	if emailErr := checkmail.ValidateFormat(data.Email); emailErr != nil {
+		logger.Error(signupLogTag, requestID, "signup validate email failed, error : %+v", emailErr)
 		DefaultResponse(c, http.StatusBadRequest, data, "Email is invalid (%s)", data.Email)
 		c.Abort()
 		return
 	}
 
 	// search if email already registered
-	resEmail, _ := userModel.GetUserByEmail(data.Email)
+	resEmail, errGetUserEmail := userModel.GetUserByEmail(data.Email)
 	if resEmail.Email != "" {
+		logger.Error(signupLogTag, requestID, "signup email already registered, email : %s", resEmail.Email)
 		DefaultResponse(c, http.StatusForbidden, data, "Email %s already in use!", data.Email)
 		c.Abort()
 		return
 	}
 
-	err := userModel.Signup(data)
+	if errGetUserEmail != nil {
+		logger.Error(signupLogTag, requestID, "signup get user by email error, error : %+v", errGetUserEmail)
+		DefaultResponse(c, http.StatusForbidden, data, "Email %s already in use!", data.Email)
+		c.Abort()
+		return
+	}
 
 	// Check if there was an error when saving user
-	if err != nil {
+	if errSignup := userModel.Signup(data); errSignup != nil {
+		logger.Error(signupLogTag, requestID, "signup user, error : %+v", errSignup)
 		DefaultResponse(c, http.StatusBadRequest, data, "Problem creating an account")
 		c.Abort()
 		return
 	}
 
+	logger.Info(signupLogTag, requestID, "New account registered (%s)", data.Email)
 	DefaultResponse(c, http.StatusCreated, data, "New account registered (%s)", data.Email)
 }
 
@@ -79,9 +96,11 @@ func (u *UserController) Signup(c *gin.Context) {
 func (u *UserController) Login(c *gin.Context) {
 	var data modelstruct.LoginUserCommand
 	var tokenResult = &modelstruct.TokenResult{}
+	requestID := requestid.Get(c)
 
 	// Bind the request body data to var data and check if all details are provided
-	if c.BindJSON(&data) != nil {
+	if bindErr := c.BindJSON(&data); bindErr != nil {
+		logger.Error(loginLogTag, requestID, "signup JSON bind failed, error : %+v", bindErr)
 		DefaultResponse(c, http.StatusNotAcceptable, data, "Request provided is not acceptable")
 		c.Abort()
 		return
@@ -90,12 +109,14 @@ func (u *UserController) Login(c *gin.Context) {
 	user, errEmail := userModel.GetUserByEmail(data.Email)
 
 	if user.Email == "" {
+		logger.Warn(loginLogTag, requestID, "User email %s account not found", data.Email)
 		DefaultResponse(c, http.StatusNotFound, data, "User email %s account not found", data.Email)
 		c.Abort()
 		return
 	}
 
 	if errEmail != nil {
+		logger.Error(loginLogTag, requestID, "Error on login sytem, error: %+v", errEmail.Error())
 		DefaultResponse(c, http.StatusBadRequest, data, "Problem logging into your account")
 		c.Abort()
 		return
@@ -109,6 +130,7 @@ func (u *UserController) Login(c *gin.Context) {
 	errHash := helpers.PasswordCompare(hashedPassword, password)
 
 	if errHash != nil {
+		logger.Error(loginLogTag, requestID, "Error on login sytem, error: %+v", errHash.Error())
 		DefaultResponse(c, http.StatusForbidden, data, "Invalid user credentials")
 		c.Abort()
 		return
@@ -116,18 +138,21 @@ func (u *UserController) Login(c *gin.Context) {
 
 	ts, err := helpers.CreateToken(user.ID.Hex())
 	if err != nil {
+		logger.Error(loginLogTag, requestID, "Error on login sytem, error: %+v", err.Error())
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
 	saveErr := CreateAuth(user.ID.Hex(), ts)
 	if saveErr != nil {
+		logger.Error(loginLogTag, requestID, "Error on login sytem, error: %+v", saveErr.Error())
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
 
 	tokenResult.AccessToken = ts.AccessToken
 	tokenResult.RefreshToken = ts.RefreshToken
 
+	logger.Info(loginLogTag, requestID, "login success for email: %s", data.Email)
 	TokenResponse(c, http.StatusOK, tokenResult)
 }
 
@@ -150,14 +175,16 @@ func CreateAuth(userID string, td *modelstruct.TokenDetails) error {
 
 // Logout : logout the user
 func (u *UserController) Logout(c *gin.Context) {
+	requestID := requestid.Get(c)
 	au, err := helpers.ExtractTokenMetadata(c.Request)
 	if err != nil {
-		glog.Errorf("%s", c.Request.Header.Get("Authorization"))
+		logger.Error(logoutLogTag, requestID, "Error on logout system, error: %+v", err)
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
 	deleted, delErr := helpers.DeleteAuth(au.AccessUUID)
-	if delErr != nil || deleted == 0 { //if any goes wrong
+	if delErr != nil || deleted == 0 {
+		logger.Error(logoutLogTag, requestID, "Error on logout system, error: %+v, deleted: %d", delErr, deleted)
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}

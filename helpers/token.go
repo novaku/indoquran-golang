@@ -3,16 +3,22 @@ package helpers
 import (
 	"fmt"
 	"indoquran-golang/config"
+	"indoquran-golang/helpers/logger"
 	"indoquran-golang/models/modelstruct"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v7"
 )
 
-var client *redis.Client
+var (
+	client     *redis.Client
+	currentDir string
+	requstID   string
+)
 
 func init() {
 	//Initializing redis
@@ -27,6 +33,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	currentDir = os.Args[0]
 }
 
 // TokenValid : check token is valid
@@ -60,7 +68,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 // ExtractToken : extract the token info
 func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
-	//normally Authorization the_token_xxx
+	//normaly Authorization the_token_xxx
 	strArr := strings.Split(bearToken, " ")
 	if len(strArr) == 2 {
 		return strArr[1]
@@ -75,6 +83,9 @@ func ExtractTokenMetadata(r *http.Request) (*modelstruct.AccessDetails, error) {
 		return nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
+
+	logger.Info("", "", currentDir+"", "%+v", claims)
+
 	if ok && token.Valid {
 		accessUUID, ok := claims["access_uuid"].(string)
 		if !ok {
