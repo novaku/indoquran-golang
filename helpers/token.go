@@ -3,11 +3,9 @@ package helpers
 import (
 	"fmt"
 	"indoquran-golang/config"
-	"indoquran-golang/helpers/logger"
 	"indoquran-golang/models/modelstruct"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
@@ -17,7 +15,10 @@ import (
 var (
 	client     *redis.Client
 	currentDir string
-	requstID   string
+)
+
+const (
+	extractTokenMetadataLogTag = "helpers|token.go|ExtractTokenMetadata()"
 )
 
 func init() {
@@ -77,27 +78,22 @@ func ExtractToken(r *http.Request) string {
 }
 
 // ExtractTokenMetadata : extract meta data from token
-func ExtractTokenMetadata(r *http.Request) (*modelstruct.AccessDetails, error) {
+func ExtractTokenMetadata(r *http.Request, requestID string) (*modelstruct.AccessDetails, error) {
 	token, err := VerifyToken(r)
 	if err != nil {
 		return nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 
-	logger.Info("", "", currentDir+"", "%+v", claims)
-
 	if ok && token.Valid {
 		accessUUID, ok := claims["access_uuid"].(string)
 		if !ok {
 			return nil, err
 		}
-		userID, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
-		if err != nil {
-			return nil, err
-		}
+
 		return &modelstruct.AccessDetails{
 			AccessUUID: accessUUID,
-			UserID:     userID,
+			UserID:     fmt.Sprintf("%s", claims["user_id"]),
 		}, nil
 	}
 	return nil, err

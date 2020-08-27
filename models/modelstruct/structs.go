@@ -50,5 +50,5 @@ type TokenResult struct {
 // AccessDetails : user access detail
 type AccessDetails struct {
 	AccessUUID string
-	UserID     uint64
+	UserID     string
 }

@@ -176,15 +176,15 @@ func CreateAuth(userID string, td *modelstruct.TokenDetails) error {
 // Logout : logout the user
 func (u *UserController) Logout(c *gin.Context) {
 	requestID := requestid.Get(c)
-	au, err := helpers.ExtractTokenMetadata(c.Request)
+	au, err := helpers.ExtractTokenMetadata(c.Request, requestID)
 	if err != nil {
-		logger.Error(logoutLogTag, requestID, "Error on logout system, error: %+v", err)
+		logger.Error(logoutLogTag, requestID, "Unable to extract token metadata on logout system, error: %+v", err)
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
 	deleted, delErr := helpers.DeleteAuth(au.AccessUUID)
 	if delErr != nil || deleted == 0 {
-		logger.Error(logoutLogTag, requestID, "Error on logout system, error: %+v, deleted: %d", delErr, deleted)
+		logger.Error(logoutLogTag, requestID, "Unable to delete auth on logout system, error: %+v, deleted: %d", delErr, deleted)
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
