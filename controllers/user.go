@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"indoquran-golang/config"
-	"indoquran-golang/helpers"
-	"indoquran-golang/helpers/logger"
-	"indoquran-golang/models"
-	"indoquran-golang/models/modelstruct"
 	"net/http"
 	"time"
+
+	"bitbucket.org/indoquran-api/config"
+	"bitbucket.org/indoquran-api/helpers"
+	"bitbucket.org/indoquran-api/helpers/logger"
+	"bitbucket.org/indoquran-api/models"
+	"bitbucket.org/indoquran-api/models/modelstruct"
 
 	"github.com/badoux/checkmail"
 	"github.com/gin-contrib/requestid"
@@ -185,7 +186,7 @@ func (u *UserController) Logout(c *gin.Context) {
 	deleted, delErr := helpers.DeleteAuth(au.AccessUUID)
 	if delErr != nil || deleted == 0 {
 		logger.Error(logoutLogTag, requestID, "Unable to delete auth on logout system, error: %+v, deleted: %d", delErr, deleted)
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+		c.JSON(http.StatusUnauthorized, "user already logout")
 		return
 	}
 	c.JSON(http.StatusOK, "Successfully logged out")

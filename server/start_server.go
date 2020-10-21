@@ -1,8 +1,8 @@
 package server
 
 import (
-	"indoquran-golang/config"
-	"indoquran-golang/routes"
+	"bitbucket.org/indoquran-api/config"
+	"bitbucket.org/indoquran-api/routes"
 
 	"github.com/gin-gonic/gin"
 )

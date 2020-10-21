@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"indoquran-golang/config"
+	"bitbucket.org/indoquran-api/config"
 	"time"
 
 	"gopkg.in/mgo.v2"

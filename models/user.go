@@ -1,8 +1,8 @@
 package models
 
 import (
-	"indoquran-golang/helpers"
-	"indoquran-golang/models/modelstruct"
+	"bitbucket.org/indoquran-api/helpers"
+	"bitbucket.org/indoquran-api/models/modelstruct"
 
 	"gopkg.in/mgo.v2/bson"
 )

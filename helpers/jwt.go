@@ -1,9 +1,10 @@
 package helpers
 
 import (
-	"indoquran-golang/config"
-	"indoquran-golang/models/modelstruct"
 	"time"
+
+	"bitbucket.org/indoquran-api/config"
+	"bitbucket.org/indoquran-api/models/modelstruct"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"

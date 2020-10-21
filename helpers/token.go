@@ -2,11 +2,12 @@ package helpers
 
 import (
 	"fmt"
-	"indoquran-golang/config"
-	"indoquran-golang/models/modelstruct"
 	"net/http"
 	"os"
 	"strings"
+
+	"bitbucket.org/indoquran-api/config"
+	"bitbucket.org/indoquran-api/models/modelstruct"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v7"
@@ -93,7 +94,7 @@ func ExtractTokenMetadata(r *http.Request, requestID string) (*modelstruct.Acces
 
 		return &modelstruct.AccessDetails{
 			AccessUUID: accessUUID,
-			UserID:     fmt.Sprintf("%s", claims["user_id"]),
+			UserID:     claims["user_id"].(string),
 		}, nil
 	}
 	return nil, err

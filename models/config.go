@@ -1,8 +1,8 @@
 package models
 
 import (
-	"indoquran-golang/config"
-	"indoquran-golang/services"
+	"bitbucket.org/indoquran-api/config"
+	"bitbucket.org/indoquran-api/services"
 )
 
 // DatabaseName database name

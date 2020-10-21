@@ -2,7 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"indoquran-golang/models/modelstruct"
+
+	"bitbucket.org/indoquran-api/models/modelstruct"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,7 +1,7 @@
 package services
 
 import (
-	"indoquran-golang/config"
+	"bitbucket.org/indoquran-api/config"
 
 	"github.com/go-redis/redis/v7"
 )

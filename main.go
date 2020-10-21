@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"indoquran-golang/models"
-	"indoquran-golang/scrapper"
-	"indoquran-golang/server"
+	"bitbucket.org/indoquran-api/models"
+	"bitbucket.org/indoquran-api/scrapper"
+	"bitbucket.org/indoquran-api/server"
 	"os"
 )
 

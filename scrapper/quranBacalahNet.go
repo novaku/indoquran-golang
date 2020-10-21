@@ -5,7 +5,8 @@ import (
 	"strconv"
 	"sync"
 
-	"indoquran-golang/models"
+	"bitbucket.org/indoquran-api/models"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const (
@@ -33,7 +34,7 @@ func worker(id int, wg *sync.WaitGroup, m *sync.Mutex) {
 
 	defer wg.Done()
 	defer m.Unlock()
-	defer collection.Database.Session.Close()
+	// defer collection.Database.Session.Close()
 
 	model := &models.AyatModel{}
 
@@ -47,11 +48,17 @@ func worker(id int, wg *sync.WaitGroup, m *sync.Mutex) {
 	model.Tafsir = TafsirID(idString)
 	model.AsbabunNuzul = AsbabunNuzulID(idString)
 
-	// fmt.Println(m)
-	err := collection.Insert(model)
-	if err != nil {
-		fmt.Println("Error insert mongodb: ", err)
+	selector := bson.M{
+		"surat_id": ayatSurat.SuratID,
+		"ayat_id":  ayatSurat.AyatID,
 	}
-	fmt.Println("AYAT_ID: ", id)
+
+	_, err := collection.Upsert(selector, model)
+
+	// err := collection.Insert(model)
+	if err != nil {
+		fmt.Printf("Error upsert mongodb: %+v", err)
+	}
+	fmt.Printf("surat: %d, ayat: %d, ayat_id: %d\n", ayatSurat.SuratID, ayatSurat.AyatID, id)
 	fmt.Println("===========================================================================")
 }

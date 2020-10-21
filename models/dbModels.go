@@ -13,7 +13,7 @@ type UserModel struct {
 
 // AyatModel defines the ayat model structure
 type AyatModel struct {
-	ID           bson.ObjectId `bson:"_id"`
+	ID           bson.ObjectId `bson:"_id,omitempty"`
 	SuratID      int           `bson:"surat_id"`
 	AyatID       int           `bson:"ayat_id"`
 	BacalahID    string        `bson:"bacalah_id"`

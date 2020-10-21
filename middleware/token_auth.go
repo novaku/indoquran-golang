@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"indoquran-golang/helpers"
 	"net/http"
+
+	"bitbucket.org/indoquran-api/helpers"
 
 	"github.com/gin-gonic/gin"
 )

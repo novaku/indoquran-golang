@@ -1,1 +1,5 @@
 .vscode/
+docker/mariadb_data
+docker/mongodb_data
+docker/redis_data
+docker/postgresql_data

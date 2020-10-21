@@ -2,6 +2,7 @@ package scrapper
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -77,6 +78,8 @@ func AyatID(id string) (string, string, []string) {
 	doc.Find("tr").Each(func(i int, s *goquery.Selection) {
 		band, err := s.Find("font").Html()
 		if err != nil {
+			fmt.Println("Error font")
+			fmt.Println(err)
 			panic(err)
 		}
 		if n == 3 {
@@ -88,6 +91,8 @@ func AyatID(id string) (string, string, []string) {
 		}
 		td, err := s.Find("td").Html()
 		if err != nil {
+			fmt.Println("Error td")
+			fmt.Println(err)
 			panic(err)
 		}
 		values[n] = strings.TrimSpace(td)

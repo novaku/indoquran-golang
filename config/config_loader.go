@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"indoquran-golang/config/static"
+	"bitbucket.org/indoquran-api/config/static"
 
 	"gopkg.in/yaml.v2"
 )
