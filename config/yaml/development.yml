@@ -20,5 +20,5 @@ database:
   host: "localhost"
   port: "27017"
   dbName: "indoquran"
-  username: ""
-  password: ""
+  username: "indoquran"
+  password: "indoquran"

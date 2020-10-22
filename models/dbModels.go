@@ -21,7 +21,7 @@ type AyatModel struct {
 	TextIndo     string        `bson:"text_indo"`
 	TranslateAR  string        `bson:"translate_ar"`
 	TranslateID  string        `bson:"translate_id"`
-	TranslateEN  string        `bson:"ranslate_en"`
+	TranslateEN  string        `bson:"translate_en"`
 	Penjelasan   []string      `bson:"penjelasan"`
 	Tafsir       string        `bson:"tafsir"`
 	AsbabunNuzul string        `bson:"asbabun_nuzul"`
